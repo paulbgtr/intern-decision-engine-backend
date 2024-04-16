@@ -51,6 +51,10 @@ public class DecisionEngine {
             throw new NoValidLoanException("No valid loan found!");
         }
 
+        if (!isValidCreditScore(creditModifier, loanAmount, loanPeriod)) {
+            throw new NoValidLoanException("No valid loan found!");
+        }
+
         while (highestValidLoanAmount(loanPeriod) < DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
             loanPeriod++;
         }
@@ -67,10 +71,24 @@ public class DecisionEngine {
     /**
      * Calculates the largest valid loan for the current credit modifier and loan period.
      *
+     * @param loanPeriod Requested loan period
      * @return Largest valid loan amount
      */
     private int highestValidLoanAmount(int loanPeriod) {
         return creditModifier * loanPeriod;
+    }
+
+    /**
+     * Calculates the credit score of the customer based on the credit modifier, loan amount and loan period.
+     *
+     * @param creditModifier Credit modifier of the customer
+     * @param loanAmount Requested loan amount
+     * @param loanPeriod Requested loan period
+     * @return Credit score of the customer
+     */
+    private boolean isValidCreditScore(int creditModifier, long loanAmount, int loanPeriod) {
+        float creditScore = (float) (creditModifier / (double) loanAmount) * loanPeriod;
+        return creditScore > 1.0;
     }
 
     /**

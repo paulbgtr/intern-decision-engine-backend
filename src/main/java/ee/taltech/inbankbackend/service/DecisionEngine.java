@@ -88,7 +88,7 @@ public class DecisionEngine {
      */
     private boolean isValidCreditScore(int creditModifier, long loanAmount, int loanPeriod) {
         float creditScore = (float) (creditModifier / (double) loanAmount) * loanPeriod;
-        return creditScore > 1.0;
+        return creditScore > DecisionEngineConstants.CREDIT_SCORE_THRESHOLD;
     }
 
     /**

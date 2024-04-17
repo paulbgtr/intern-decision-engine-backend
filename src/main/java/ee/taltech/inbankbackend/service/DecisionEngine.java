@@ -52,7 +52,10 @@ public class DecisionEngine {
         }
 
         if (!isValidCreditScore(creditModifier, loanAmount, loanPeriod)) {
-            throw new NoValidLoanException("No valid loan found!");
+            loanAmount = findHighestApprovableLoanAmount(loanAmount, loanPeriod);
+            if (loanAmount == null) {
+                throw new NoValidLoanException("No valid loan amount found within the allowable loan period range!");
+            }
         }
 
         while (highestValidLoanAmount(loanPeriod) < DecisionEngineConstants.MINIMUM_LOAN_AMOUNT) {
@@ -76,6 +79,26 @@ public class DecisionEngine {
      */
     private int highestValidLoanAmount(int loanPeriod) {
         return creditModifier * loanPeriod;
+    }
+
+    /**
+     * Finds the highest loan amount that can be approved based on the credit score calculation,
+     * starting from the requested loan amount and decrementing until a valid loan amount is found
+     * or the minimum loan limit is reached. This method ensures that if the initially requested
+     * loan amount is too high to be approved, a lower amount that can be approved will be searched
+     * for within the acceptable range.
+     *
+     * @param requestedLoanAmount The loan amount initially requested by the customer.
+     * @param loanPeriod The loan period for which the loan amount is being requested.
+     * @return The highest approvable loan amount within the range from the requested loan amount.
+     */
+    private Long findHighestApprovableLoanAmount(Long requestedLoanAmount, int loanPeriod) {
+        for (long amount = requestedLoanAmount; amount >= DecisionEngineConstants.MINIMUM_LOAN_AMOUNT; amount--) {
+            if (isValidCreditScore(creditModifier, amount, loanPeriod)) {
+                return amount;
+            }
+        }
+        return null;
     }
 
     /**

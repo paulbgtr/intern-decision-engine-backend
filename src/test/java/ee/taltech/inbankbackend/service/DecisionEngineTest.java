@@ -110,9 +110,11 @@ class DecisionEngineTest {
     }
 
     @Test
-    void testInvalidCreditScore() {
-        assertThrows(NoValidLoanException.class,
-                () -> decisionEngine.calculateApprovedLoan(segment1PersonalCode, 2000L, 12));
+    void testCreditScoreMoreThanOne() throws InvalidLoanPeriodException, NoValidLoanException,
+            InvalidPersonalCodeException, InvalidLoanAmountException {
+        Decision decision = decisionEngine.calculateApprovedLoan(segment2PersonalCode, 5000L, 12);
+        assertEquals(3600, decision.getLoanAmount());
+        assertEquals(12, decision.getLoanPeriod());
     }
 
     @Test

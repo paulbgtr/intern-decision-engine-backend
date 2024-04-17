@@ -94,6 +94,7 @@ class DecisionEngineTest {
                 () -> decisionEngine.calculateApprovedLoan(segment1PersonalCode, 4000L, tooLongLoanPeriod));
     }
 
+
     @Test
     void testFindSuitableLoanPeriod() throws InvalidLoanPeriodException, NoValidLoanException,
             InvalidPersonalCodeException, InvalidLoanAmountException {
@@ -112,6 +113,14 @@ class DecisionEngineTest {
     void testInvalidCreditScore() {
         assertThrows(NoValidLoanException.class,
                 () -> decisionEngine.calculateApprovedLoan(segment1PersonalCode, 2000L, 12));
+    }
+
+    @Test
+    void testEnterMaximumAllowedAmount() throws InvalidLoanPeriodException, NoValidLoanException,
+            InvalidPersonalCodeException, InvalidLoanAmountException {
+        Decision decision = decisionEngine.calculateApprovedLoan(segment2PersonalCode, 3600L, 12);
+        assertEquals(3600, decision.getLoanAmount());
+        assertEquals(12, decision.getLoanPeriod());
     }
 }
 

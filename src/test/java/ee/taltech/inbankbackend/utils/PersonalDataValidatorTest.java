@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class PersonalDataValidatorTest {
@@ -27,17 +27,17 @@ class PersonalDataValidatorTest {
 
     @Test
     void testValidAge() {
-        assertEquals(true, personalDataValidator.canReceiveLoan(validPersonalCode));
+        assertTrue(personalDataValidator.canReceiveLoan(validPersonalCode));
     }
 
     @Test
     void testOverage() {
-        assertEquals(false, personalDataValidator.canReceiveLoan(overagePersonalCode));
+        assertFalse(personalDataValidator.canReceiveLoan(overagePersonalCode));
     }
 
     @Test
-    void testUnderage() {
-        assertEquals(false, personalDataValidator.canReceiveLoan(underagePersonalCode));
+     void testUnderage() {
+        assertFalse(personalDataValidator.canReceiveLoan(underagePersonalCode));
     }
 }
 
